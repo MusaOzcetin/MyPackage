@@ -10,5 +10,5 @@ Documentation for [MyPackage](https://github.com/MusaOzcetin/MyPackage.jl).
 ```
 
 ```@autodocs
-Modules = [MyPackage]
+Modules = [MyPackage, MyPackage.CreateGenome, MyPackage.Fitness, MyPackage.ForwardPass, MyPackage.Types]
 ```
