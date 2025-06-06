@@ -3,10 +3,24 @@ module CreateGenome
 using ..Types
 
 export create_genome
+"""
+    create_genome(id, num_inputs, num_outputs) → Genome
 
-# function to instantiate a network
-# number of inputs & outputs is choosable, connections are hardcoded though
+Instantiate a `Genome` with an `id` Id, `num_inputs` input nodes and
+`num_outputs` output nodes.  
+Creates two hardcoded connections—from input 1 and input 2 to the first output—
+each with a random weight.
 
+# Arguments
+- `id::Int`: Unique genome identifier.
+- `num_inputs::Int`: Number of input nodes.
+- `num_outputs::Int`: Number of output nodes.
+
+# Returns
+A `Genome(id, nodes, connections)` where `nodes` is a `Dict{Int,Node}` of all
+input/output nodes, and `connections` is a `Dict{(Int,Int),Connection}` with
+two initial connections (innovation 1 and 2).
+"""
 function create_genome(id::Int, num_inputs::Int, num_outputs::Int)
     nodes = Dict{Int,Node}()
     connections = Dict{Tuple{Int,Int},Connection}()
