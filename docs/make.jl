@@ -18,6 +18,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/MusaOzcetin/MyPackage.jl",
+    repo="github.com/MusaOzcetin/MyPackage",
     devbranch="main",
 )
