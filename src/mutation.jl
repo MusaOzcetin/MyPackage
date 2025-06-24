@@ -71,6 +71,9 @@ function add_connection!(genome::Genome)
     attempts = 0
     max_attempts = 50
     
+    from_node = rand(nodes)
+    to_node = rand(nodes)
+
     if !creates_cycle(genome, from_node.id, to_node.id)
     # safe to add connection
     push!(genome.connections, ConnectionGene(from_node.id, to_node.id, randn(), true))
