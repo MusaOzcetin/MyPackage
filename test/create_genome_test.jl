@@ -2,32 +2,36 @@ using Test
 using Neat
 
 @testset "create_genome" begin
-    genome = create_genome(1, 2, 1)
+    # Example: 2 inputs, 1 output
+    genome = Neat.CreateGenome.create_genome(1, 2, 1)
 
-    # --- Check basic genome structure ---
-    @test isa(genome, Genome)
+    # --- Check genome type and ID ---
+    @test isa(genome, Neat.Types.Genome)
     @test genome.id == 1
+
+    # --- Check node count ---
     @test length(genome.nodes) == 3  # 2 inputs + 1 output
-    @test length(genome.connections) == 2
+
+    # --- Check connection count (should be inputs * outputs) ---
+    @test length(genome.connections) == 2  # 2 * 1 = 2
 
     # --- Check node types ---
     @test genome.nodes[1].nodetype == :input
     @test genome.nodes[2].nodetype == :input
     @test genome.nodes[3].nodetype == :output
 
-    # --- Check connections ---
-    @test haskey(genome.connections, (1, 3))
-    @test haskey(genome.connections, (2, 3))
+    # --- Check that each input connects to each output ---
+    for input_id in 1:2
+        for output_id in 3:3  # output IDs start at num_inputs + 1
+            @test haskey(genome.connections, (input_id, output_id))
+            conn = genome.connections[(input_id, output_id)]
+            @test conn.enabled == true
+            @test conn.in_node == input_id
+            @test conn.out_node == output_id
+        end
+    end
 
-    conn1 = genome.connections[(1, 3)]
-    conn2 = genome.connections[(2, 3)]
-
-    @test conn1.enabled == true
-    @test conn2.enabled == true
-
-    @test conn1.in_node == 1 && conn1.out_node == 3
-    @test conn2.in_node == 2 && conn2.out_node == 3
-
-    @test conn1.innovation_number == 1
-    @test conn2.innovation_number == 2
+    # --- Check innovation numbers are unique and sequential ---
+    innov_numbers = [conn.innovation_number for conn in values(genome.connections)]
+    @test innov_numbers == collect(1:length(innov_numbers))
 end
