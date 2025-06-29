@@ -39,9 +39,10 @@ end
         species_list = [[pop[1], pop[2]], [pop[3]]]
         adjust_fitness!(species_list)
 
-        @test pop[1].fitness ≈ -0.5
-        @test pop[2].fitness ≈ -0.5
-        @test pop[3].fitness ≈ -1.0
+        @test pop[1].adjusted_fitness ≈ -0.5
+        @test pop[2].adjusted_fitness ≈ -0.5
+        @test pop[3].adjusted_fitness ≈ -1.0
+
     end
 
     @testset "compute_offspring_counts" begin

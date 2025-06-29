@@ -26,6 +26,7 @@ mutable struct Genome
     nodes::Dict{Int,Node}
     connections::Dict{Tuple{Int,Int},Connection}
     fitness::Float64 # for storing fitness score to avoid using locally
+    adjusted_fitness::Float64 # normalized fitness value shared across species 
 end
 
 end

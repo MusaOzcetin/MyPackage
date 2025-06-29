@@ -141,7 +141,7 @@ function adjust_fitness!(species_list::Vector{Vector{Genome}})
     for species in species_list
         s_size = length(species)
         for genome in species
-            genome.fitness /= s_size
+            genome.adjusted_fitness = genome.fitness / s_size
         end
     end
 end
@@ -160,17 +160,18 @@ sum of adjusted fitness values in each species, relative to the population's tot
 - `Vector{Int}`: A list of offspring counts per species (same order)
 """
 function compute_offspring_counts(species_list::Vector{Vector{Genome}}, population_size::Int)::Vector{Int}
-    species_fitness_totals = [sum(g.fitness for g in s) for s in species_list]
-    total_fitness = sum(species_fitness_totals)
+    # Use adjusted fitness instead of raw fitness
+    species_fitness_totals = [sum(g.adjusted_fitness for g in s) for s in species_list]
+    total_adjusted = sum(species_fitness_totals)
 
-    if total_fitness == 0
+    if total_adjusted == 0
         # Avoid divide-by-zero: assign equal offspring
         return fill(div(population_size, length(species_list)), length(species_list))
     end
 
     # Proportionally allocate offspring
     counts = [
-        round(Int, (fit / total_fitness) * population_size)
+        round(Int, (fit / total_adjusted) * population_size)
         for fit in species_fitness_totals
     ]
 
@@ -183,6 +184,7 @@ function compute_offspring_counts(species_list::Vector{Vector{Genome}}, populati
 
     return counts
 end
+
 
 """
     select_elites(species::Vector{T}, num_elites::Int) where T

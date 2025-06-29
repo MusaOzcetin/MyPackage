@@ -83,7 +83,7 @@ end
     end
 
     # Dummy ID and initial fitness for child
-    return Genome(parent1.id + parent2.id, child_nodes, child_connections, 0.0)
+    return Genome(parent1.id + parent2.id, child_nodes, child_connections, 0.0, 0.0)
 end
 
 

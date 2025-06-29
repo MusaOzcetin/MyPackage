@@ -48,7 +48,9 @@ function create_genome(id::Int, num_inputs::Int, num_outputs::Int)
     connections[(1, num_inputs + 1)] = Connection(1, num_inputs + 1, randn(), true, 1)
     connections[(2, num_inputs + 1)] = Connection(2, num_inputs + 1, randn(), true, 2)
 
-    return Genome(id, nodes, connections, 0.0)
+    # Added adjusted_fitness initialized to 0.0
+    return Genome(id, nodes, connections, 0.0, 0.0)
 end
+
 
 end
