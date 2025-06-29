@@ -32,7 +32,7 @@ function evaluate_fitness(genome::Genome)::Float64
         total_error += (output_value - target)^2  
     end
 
-    return 4.0-total_error # the lower the error, the higher the fitness
+    return -total_error # the lower the error, the higher the fitness
 end
 
 end

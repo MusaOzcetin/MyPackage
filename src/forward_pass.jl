@@ -20,13 +20,13 @@ function forward_pass(genome::Genome, input::Vector{Float64})::Dict{Int, Float64
     # Determine evaluation order via topological sorting
     sorted_nodes = topological_sort(genome)
 
-    # Identify input nodes
-    input_nodes = [n.id for n in values(genome.nodes) if n.nodetype == :input]
+    # Identify and sort input nodes to align with provided input vector
+    input_nodes = sort([n.id for n in values(genome.nodes) if n.nodetype == :input])
 
     # Prepare activation storage
     activations = Dict{Int, Float64}()
 
-    # Assign provided values to input nodes
+    # Assign provided values to input nodes in sorted order
     for (i, nid) in enumerate(input_nodes)
         activations[nid] = input[i]
     end
