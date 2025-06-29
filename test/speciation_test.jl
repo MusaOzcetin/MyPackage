@@ -1,5 +1,10 @@
 using Test
 using Neat
+using Neat: Genome, select_elites, select_parents
+
+struct MockGenome
+    adjusted_fitness::Float64
+end
 
 @testset "Speciation" begin
 
@@ -34,9 +39,10 @@ using Neat
         species_list = [[pop[1], pop[2]], [pop[3]]]
         adjust_fitness!(species_list)
 
-        @test pop[1].fitness ≈ -0.5
-        @test pop[2].fitness ≈ -0.5
-        @test pop[3].fitness ≈ -1.0
+        @test pop[1].adjusted_fitness ≈ -0.5
+        @test pop[2].adjusted_fitness ≈ -0.5
+        @test pop[3].adjusted_fitness ≈ -1.0
+
     end
 
     @testset "compute_offspring_counts" begin
@@ -56,4 +62,28 @@ using Neat
         @test counts[2] > counts[1]  # more fit species gets more offspring
     end
 
+    @testset "Selection Tests" begin
+    # Create mock genomes with varying adjusted fitness
+    genomes = [MockGenome(i) for i in 1:10]
+
+
+    @testset "select_elites" begin
+        elites = select_elites(genomes, 3)
+        @test length(elites) == 3
+        @test all(e in genomes for e in elites)
+        @test elites[1].adjusted_fitness ≥ elites[2].adjusted_fitness ≥ elites[3].adjusted_fitness
+    end
+
+    @testset "select_parents" begin
+        elites = select_elites(genomes, 2)
+        parent_pairs = select_parents(genomes, 5; exclude=Set(elites))
+        @test length(parent_pairs) == 5
+        for (p1, p2) in parent_pairs
+            @test !(p1 in elites)
+            @test !(p2 in elites)
+            @test p1 in genomes
+            @test p2 in genomes
+        end
+    end
+end
 end
