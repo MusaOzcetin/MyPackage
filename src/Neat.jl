@@ -35,6 +35,8 @@ export Genome,
     compatibility_distance,
     assign_species!,
     adjust_fitness!,
-    compute_offspring_counts
+    compute_offspring_counts, 
+    select_elites, 
+    select_parents
     
 end # module
