@@ -8,6 +8,7 @@ using Test
         include("types_test.jl")
         include("crossover_test.jl")
         include("speciation_test.jl")
+        #include("mutation_test.jl")
 
 end
 

@@ -13,12 +13,12 @@ using Neat
     # Parent 1: has 2 connections
     conn1 = Connection(1, 3, 1.0, true, 1)
     conn2 = Connection(2, 3, 1.0, true, 2)
-    p1 = Genome(1, copy(nodes), Dict((1, 3)=>conn1, (2, 3)=>conn2), -0.5)
+    p1 = Genome(1, copy(nodes), Dict((1, 3)=>conn1, (2, 3)=>conn2), -0.5, 0.0)
 
     # Parent 2: one matching, one disjoint gene
     conn2p2 = Connection(2, 3, 2.0, false, 2)  # matching but disabled
     conn3p2 = Connection(1, 4, 0.5, true, 3)   # disjoint/excess
-    p2 = Genome(2, copy(nodes), Dict((2, 3)=>conn2p2, (1, 4)=>conn3p2), -1.0)
+    p2 = Genome(2, copy(nodes), Dict((2, 3)=>conn2p2, (1, 4)=>conn3p2), -1.0, 0.0)
 
     child = crossover(p1, p2)
 
