@@ -214,6 +214,7 @@ function compute_offspring_counts(species_list::Vector{Vector{Genome}}, populati
 end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 """
     select_elites(species::Vector{T}, elite_frac::Float64) where {T}
@@ -239,6 +240,9 @@ end
 
 export select_elites
 =======
+=======
+
+>>>>>>> 09dfa74 (updated speciation.jl with adjusted fitness)
 """
     select_elites(species::Vector{T}, num_elites::Int) where T
 

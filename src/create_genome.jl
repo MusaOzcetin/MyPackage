@@ -51,5 +51,9 @@ function create_genome(id::Int, num_inputs::Int, num_outputs::Int)::Genome
 end
 
 
+<<<<<<< HEAD
 end # module
 
+=======
+end
+>>>>>>> 09dfa74 (updated speciation.jl with adjusted fitness)

@@ -9,6 +9,7 @@ using Neat
         3 => Neat.Types.Node(3, :output)
     )
 
+<<<<<<< HEAD
     # --- Create dummy connections ---
     connections = Dict(
         (1, 3) => Neat.Types.Connection(1, 3, 0.5, true, 1),
@@ -21,6 +22,9 @@ using Neat
     genome = Neat.Types.Genome(1, nodes, connections, 0.0, 0.0)
 
     # --- Input vector ---
+=======
+    genome = Genome(1, nodes, connections, 0.0, 0.0)
+>>>>>>> 09dfa74 (updated speciation.jl with adjusted fitness)
     input = [1.0, 2.0]
 
     # --- Run forward_pass ---
