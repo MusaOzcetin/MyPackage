@@ -213,6 +213,7 @@ function compute_offspring_counts(species_list::Vector{Vector{Genome}}, populati
     return counts
 end
 
+<<<<<<< HEAD
 
 """
     select_elites(species::Vector{T}, elite_frac::Float64) where {T}
@@ -237,5 +238,62 @@ function select_elites(species::Vector{T}, elite_frac::Float64) where {T}
 end
 
 export select_elites
+=======
+"""
+    select_elites(species::Vector{T}, num_elites::Int) where T
+
+Selects the top `num_elites` genomes from the given species based on their `adjusted_fitness`.
+
+# Arguments
+- `species`: a vector of individuals (e.g., Genomes) that have an `adjusted_fitness` field.
+- `num_elites`: how many of the top individuals to select.
+
+# Returns
+- A vector of the top-performing individuals, sorted by descending `adjusted_fitness`.
+"""
+function select_elites(species::Vector{T}, num_elites::Int) where {T}
+    sorted = sort(species, by = g -> g.adjusted_fitness, rev = true)
+    return sorted[1:min(num_elites, length(sorted))]
+end
+
+
+"""
+    select_parents(species::Vector{T}, num_parents::Int; exclude::Set{T}=Set()) where T
+
+Selects `num_parents` pairs of parents using fitness-proportionate (roulette wheel) selection.
+
+# Arguments
+- `species`: a vector of individuals with an `adjusted_fitness` field.
+- `num_parents`: the number of parent pairs to select.
+- `exclude`: (optional) a set of individuals to skip (e.g., elites).
+
+# Returns
+- A vector of `(parent1, parent2)` tuples, each selected by roulette wheel based on `adjusted_fitness`.
+"""
+function select_parents(species::Vector{T}, num_parents::Int; exclude::Set{T}=Set()) where {T}
+    candidates = filter(g -> !(g in exclude), species)
+    total_fitness = sum(g.adjusted_fitness for g in candidates)
+
+    if isempty(candidates) || total_fitness == 0
+        return [(rand(candidates), rand(candidates)) for _ in 1:num_parents]
+    end
+
+    function roulette_select()
+        r = rand() * total_fitness
+        acc = 0.0
+        for g in candidates
+            acc += g.adjusted_fitness
+            if acc >= r
+                return g
+            end
+        end
+        return last(candidates)
+    end
+
+    return [(roulette_select(), roulette_select()) for _ in 1:num_parents]
+end
+
+export select_elites, select_parents
+>>>>>>> 35fdd1b (Add select_elites and select_parents)
 
 end
