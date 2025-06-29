@@ -28,12 +28,10 @@ This package defines the basic building blocks of a NEAT genome:
   - `evaluate_fitness(genome)`
   - Tests the genome on the XOR problem, returning the negative sum of squared errors (higher is better).
 
-## Installation
+## Getting Started
 
-Clone this repository into your project’s `src/` folder (or install it as a local package):
+📘 [Getting Started Guide](docs/getting_started.md)
 
-```bash
-git clone https://github.com/yourusername/Neat.jl.git
 
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://MusaOzcetin.github.io/Neat.jl/stable/)
