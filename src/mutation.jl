@@ -88,6 +88,7 @@ function add_connection!(genome::Genome)
             attempts += 1
             continue
         end
+<<<<<<< HEAD
     
        # Output cannot feed into input or other nodes
         if in_node.nodetype == :output
@@ -97,6 +98,10 @@ function add_connection!(genome::Genome)
     
         # Do not allow connections INTO input nodes
         if out_node.nodetype == :input
+=======
+
+        if in_node.nodetype == :output && out_node.nodetype == :input
+>>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
             attempts += 1
             continue
         end
@@ -109,7 +114,11 @@ function add_connection!(genome::Genome)
 
         # Check for cycles: adding in_node → out_node should NOT create a path back to in_node
         if causes_cycle(genome, in_node.id, out_node.id)
+<<<<<<< HEAD
             #println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
+=======
+            println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
+>>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
             attempts += 1
             continue
         end

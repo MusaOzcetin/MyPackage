@@ -1,5 +1,6 @@
 using Test
 using Neat
+<<<<<<< HEAD
 using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
 
 @testset "Mutation tests" begin
@@ -44,6 +45,9 @@ using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
         )
     end
 end
+=======
+using Neat.Mutation: causes_cycle, add_connection!
+>>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
 
 @testset "add_connection! cycle prevention" begin
     genome = create_genome(1, 2, 1)
@@ -90,6 +94,7 @@ end
 
     # TODO: delete this part before making it final
     println("Nodes in genome:")
+<<<<<<< HEAD
     for (id, node) in genome.nodes
         println(" - ID $id : ", node.nodetype)
     end
@@ -97,6 +102,16 @@ end
     for ((src, dst), conn) in genome.connections
         println(" - $src → $dst (enabled=$(conn.enabled), weight=$(conn.weight))")
     end
+=======
+        for (id, node) in genome.nodes
+    println(" - ID $id : ", node.nodetype)
+        end
+       println("Connections in genome:")
+        for ((src, dst), conn) in genome.connections
+    println(" - $src → $dst (enabled=$(conn.enabled), weight=$(conn.weight))")
+        end
+ 
+>>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
 
     # Assert that no cycle exists after all mutations
     @test !has_cycle(genome)

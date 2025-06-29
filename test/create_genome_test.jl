@@ -69,6 +69,10 @@ using Neat
 
     @test isfinite(c1.weight)
     @test isfinite(c2.weight)
+<<<<<<< HEAD
 >>>>>>> 09dfa74 (updated speciation.jl with adjusted fitness)
 end
 
+=======
+end
+>>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
