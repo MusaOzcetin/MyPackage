@@ -4,7 +4,7 @@ using ..Types
 using ..Innovation
 using Random
 
-export mutate_weights!, mutate, add_connection!, add_node!
+export mutate_weights!, mutate, add_connection!, add_node!, causes_cycle
 
 """
     mutate_weights!(genome; perturb_chance=0.8, sigma=0.5)
@@ -30,6 +30,36 @@ function mutate_weights!(genome::Genome; perturb_chance=0.8, sigma=0.5)
 end
 
 """
+   HELPER: causes_cycle(genome, src_id, dst_id)
+
+Checks if adding a connection from `src_id` to `dst_id` would create a cycle.
+"""
+function causes_cycle(genome::Genome, src_id::Int, dst_id::Int)::Bool
+    visited = Set{Int}()
+    stack = [dst_id]
+
+    while !isempty(stack)
+        current = pop!(stack)
+        if current == src_id
+            return true  # A path exists back to src → cycle would form
+        end
+        if current in visited
+            continue
+        end
+        push!(visited, current)
+
+        # Push all nodes that this node connects to (outgoing edges only)
+        for (key, conn) in genome.connections
+            if conn.enabled && conn.in_node == current
+                push!(stack, conn.out_node)
+            end
+        end
+    end
+    return false
+end
+
+
+"""
     add_connection!(genome::Genome)
 
 Attempts to add a new connection between two previously unconnected nodes.
@@ -37,6 +67,7 @@ Attempts to add a new connection between two previously unconnected nodes.
 - Randomly selects two nodes from the genome.
 - Ensures they are not already connected.
 - Ensures the direction respects feedforward constraints (no output → input).
+- Checks for cycles
 - Adds the new connection with a random weight and a new innovation number.
 
 Does nothing if no valid pair is found after 50 attempts.
@@ -49,29 +80,35 @@ function add_connection!(genome::Genome)
     attempts = 0
     max_attempts = 50
 
-    while attempts < max_attempts  #avoid Infinite loop
+    while attempts < max_attempts
         in_node = rand(nodes)
         out_node = rand(nodes)
 
-        if in_node.id == out_node.id       #two identical nodes
+        if in_node.id == out_node.id
             attempts += 1
             continue
         end
 
-        if in_node.nodetype == :output && out_node.nodetype == :input  #connection between output -> inout node
+        if in_node.nodetype == :output && out_node.nodetype == :input
             attempts += 1
             continue
         end
 
         key = (in_node.id, out_node.id)
+        if haskey(genome.connections, key)
+            attempts += 1
+            continue
+        end
 
-        if haskey(genome.connections, key)          #connection already exists
+        # Check for cycles: adding in_node → out_node should NOT create a path back to in_node
+        if causes_cycle(genome, in_node.id, out_node.id)
+            println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
             attempts += 1
             continue
         end
 
         innovation_number = next_innovation_number()
-        genome.connections[key] = Connection(                               #create new connection
+        genome.connections[key] = Connection(
             in_node.id,
             out_node.id,
             randn(),
@@ -81,6 +118,7 @@ function add_connection!(genome::Genome)
         return nothing
     end
 end
+
 
 """
     add_node!(genome::Genome)
