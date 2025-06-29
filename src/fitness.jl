@@ -24,8 +24,12 @@ function evaluate_fitness(genome::Genome)::Float64
     total_error = 0.0
 
     for (x, target) in xor_data
-        output = forward_pass(genome, x) # compute forward_pass
-        total_error += (output - target)^2  # compute error
+        acts = forward_pass(genome, x)
+
+        output_nodes = [n.id for n in values(genome.nodes) if n.nodetype == :output]
+
+        output_value = acts[output_nodes[1]] 
+        total_error += (output_value - target)^2  
     end
 
     return -total_error # the lower the error, the higher the fitness

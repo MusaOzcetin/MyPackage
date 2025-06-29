@@ -58,6 +58,24 @@ function add_connection!(genome::Genome)
             continue
         end
 
+        # Output cannot feed into input or other nodes
+        if in_node.nodetype == :output
+            attempts += 1
+            continue
+        end
+
+        # Do not allow connections INTO input nodes
+        if out_node.nodetype == :input
+            attempts += 1
+            continue
+        end
+
+        # Enforce feedforward order: in_node must come before out_node
+        if in_node.id > out_node.id
+            attempts += 1
+            continue
+        end
+
         if in_node.nodetype == :output && out_node.nodetype == :input  #connection between output -> inout node
             attempts += 1
             continue
