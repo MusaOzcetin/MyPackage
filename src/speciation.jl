@@ -141,7 +141,7 @@ function adjust_fitness!(species_list::Vector{Vector{Genome}})
     for species in species_list
         s_size = length(species)
         for genome in species
-            genome.fitness /= s_size
+            genome.adjusted_fitness = genome.fitness / s_size
         end
     end
 end
@@ -160,17 +160,18 @@ sum of adjusted fitness values in each species, relative to the population's tot
 - `Vector{Int}`: A list of offspring counts per species (same order)
 """
 function compute_offspring_counts(species_list::Vector{Vector{Genome}}, population_size::Int)::Vector{Int}
-    species_fitness_totals = [sum(g.fitness for g in s) for s in species_list]
-    total_fitness = sum(species_fitness_totals)
+    # Use adjusted fitness instead of raw fitness
+    species_fitness_totals = [sum(g.adjusted_fitness for g in s) for s in species_list]
+    total_adjusted = sum(species_fitness_totals)
 
-    if total_fitness == 0
+    if total_adjusted == 0
         # Avoid divide-by-zero: assign equal offspring
         return fill(div(population_size, length(species_list)), length(species_list))
     end
 
     # Proportionally allocate offspring
     counts = [
-        round(Int, (fit / total_fitness) * population_size)
+        round(Int, (fit / total_adjusted) * population_size)
         for fit in species_fitness_totals
     ]
 
@@ -183,5 +184,62 @@ function compute_offspring_counts(species_list::Vector{Vector{Genome}}, populati
 
     return counts
 end
+
+
+"""
+    select_elites(species::Vector{T}, num_elites::Int) where T
+
+Selects the top `num_elites` genomes from the given species based on their `adjusted_fitness`.
+
+# Arguments
+- `species`: a vector of individuals (e.g., Genomes) that have an `adjusted_fitness` field.
+- `num_elites`: how many of the top individuals to select.
+
+# Returns
+- A vector of the top-performing individuals, sorted by descending `adjusted_fitness`.
+"""
+function select_elites(species::Vector{T}, num_elites::Int) where {T}
+    sorted = sort(species, by = g -> g.adjusted_fitness, rev = true)
+    return sorted[1:min(num_elites, length(sorted))]
+end
+
+
+"""
+    select_parents(species::Vector{T}, num_parents::Int; exclude::Set{T}=Set()) where T
+
+Selects `num_parents` pairs of parents using fitness-proportionate (roulette wheel) selection.
+
+# Arguments
+- `species`: a vector of individuals with an `adjusted_fitness` field.
+- `num_parents`: the number of parent pairs to select.
+- `exclude`: (optional) a set of individuals to skip (e.g., elites).
+
+# Returns
+- A vector of `(parent1, parent2)` tuples, each selected by roulette wheel based on `adjusted_fitness`.
+"""
+function select_parents(species::Vector{T}, num_parents::Int; exclude::Set{T}=Set()) where {T}
+    candidates = filter(g -> !(g in exclude), species)
+    total_fitness = sum(g.adjusted_fitness for g in candidates)
+
+    if isempty(candidates) || total_fitness == 0
+        return [(rand(candidates), rand(candidates)) for _ in 1:num_parents]
+    end
+
+    function roulette_select()
+        r = rand() * total_fitness
+        acc = 0.0
+        for g in candidates
+            acc += g.adjusted_fitness
+            if acc >= r
+                return g
+            end
+        end
+        return last(candidates)
+    end
+
+    return [(roulette_select(), roulette_select()) for _ in 1:num_parents]
+end
+
+export select_elites, select_parents
 
 end

@@ -20,7 +20,7 @@ using Neat
     # Test Genome
     nodes = Dict(1 => Node(1, :input), 2 => Node(2, :output))
     connections = Dict((1, 2) => conn)
-    genome = Genome(99, nodes, connections, 0.0)
+    genome = Genome(99, nodes, connections, 0.0, 0.0)
 
     @test isa(genome, Genome)
     @test genome.id == 99

@@ -9,7 +9,7 @@ using Neat
         (1, 3) => Connection(1, 3, 1.0, true, 1), (2, 3) => Connection(2, 3, 1.0, true, 2)
     )
 
-    genome = Genome(1, nodes, connections, 0.0)
+    genome = Genome(1, nodes, connections, 0.0, 0.0)
 
     fitness = evaluate_fitness(genome)
     genome.fitness = fitness
