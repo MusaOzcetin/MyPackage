@@ -10,7 +10,7 @@ export Node, Connection, Genome
 
 struct Node
     id::Int
-    nodetype::Symbol # input, hidden or output
+    nodetype::Symbol # input, hidden, output, bias
 end
 
 mutable struct Connection
