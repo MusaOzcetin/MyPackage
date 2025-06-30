@@ -1,61 +1,100 @@
 using Test
 using Neat
-using Neat.Mutation: causes_cycle, add_connection!
+using Neat.CreateGenome: create_genome
+using Neat.Mutation: add_connection!
+using Neat.Types: Genome
 
 @testset "add_connection! cycle prevention" begin
-    genome = create_genome(1, 2, 1)
+    genome = create_genome(1, 2, 1;
+                           deterministic=true,
+                           weight_map=Dict{Tuple{Int, Int}, Float64}(),
+                           fully_connect=false)
 
-    # Apply many connection mutations
-    for _ in 1:50
-        add_connection!(genome)
+    success = true
+    try
+        for _ in 1:50
+            add_connection!(genome)
+        end
+    catch e
+        @warn "add_connection! threw an error" exception = e
+        success = false
     end
+    @test success
 
-    # Function to check the entire graph for any cycles
+    # Check for cycle presence
     function has_cycle(genome::Genome)::Bool
         visited = Set{Int}()
-        stack = Set{Int}()
-
-        function visit(node_id::Int)
-            if node_id in stack
-                return true  # Found a cycle
+        function dfs(node::Int, stack::Set{Int})
+            if node in stack
+                return true
             end
-            if node_id in visited
+            if node in visited
                 return false
             end
-            push!(visited, node_id)
-            push!(stack, node_id)
-
+            push!(visited, node)
+            push!(stack, node)
             for conn in values(genome.connections)
-                if conn.enabled && conn.in_node == node_id
-                    if visit(conn.out_node)
+                if conn.enabled && conn.in_node == node
+                    if dfs(conn.out_node, stack)
                         return true
                     end
                 end
             end
-
-            delete!(stack, node_id)
+            delete!(stack, node)
             return false
         end
-
         for node_id in keys(genome.nodes)
-            if visit(node_id)
+            if dfs(node_id, Set{Int}())
                 return true
             end
         end
         return false
     end
 
-    # TODO: delete this part before making it final
-    println("Nodes in genome:")
-        for (id, node) in genome.nodes
-    println(" - ID $id : ", node.nodetype)
-        end
-       println("Connections in genome:")
-        for ((src, dst), conn) in genome.connections
-    println(" - $src → $dst (enabled=$(conn.enabled), weight=$(conn.weight))")
-        end
- 
-
-    # Assert that no cycle exists after all mutations
     @test !has_cycle(genome)
+end
+
+@testset "Bias Node Used in Mutation" begin
+    num_inputs = 3
+    num_outputs = 2
+    bias_id = num_inputs + 1
+    weight_map = Dict{Tuple{Int, Int}, Float64}()
+
+    genome = create_genome(2, num_inputs, num_outputs;
+                           deterministic=true,
+                           weight_map=weight_map,
+                           fully_connect=false)
+
+    original_connection_count = length(genome.connections)
+    found_bias_connection = false
+    added = false
+
+    for i in 1:200  # Try more times to increase odds
+        add_connection!(genome)
+        new_count = length(genome.connections)
+
+        if new_count > original_connection_count
+            added = true
+            original_connection_count = new_count
+        end
+
+        # Check new connections for bias usage
+        for (src, dst) in keys(genome.connections)
+            if src == bias_id && genome.nodes[dst].nodetype in (:hidden, :output)
+                found_bias_connection = true
+                break
+            end
+        end
+
+        if found_bias_connection
+            break
+        end
+    end
+
+    @test added  # Ensure at least one connection was added
+
+    @test found_bias_connection ||
+        @warn "Bias node was not used in mutation after 200 attempts. Check bias eligibility in add_connection!"
+
+    @test found_bias_connection
 end

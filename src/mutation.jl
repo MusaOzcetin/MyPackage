@@ -81,32 +81,39 @@ function add_connection!(genome::Genome)
     max_attempts = 50
 
     while attempts < max_attempts
-        in_node = rand(nodes)
-        out_node = rand(nodes)
+        # Filter valid sources and targets
+        possible_sources = filter(n -> n.nodetype in (:input, :bias, :hidden), nodes)
+        possible_targets = filter(n -> n.nodetype in (:hidden, :output), nodes)
 
+        # If no valid pairs, abort early
+        if isempty(possible_sources) || isempty(possible_targets)
+            return nothing
+        end
+
+        in_node = rand(possible_sources)
+        out_node = rand(possible_targets)
+
+        # Avoid self-loops
         if in_node.id == out_node.id
             attempts += 1
             continue
         end
 
-        if in_node.nodetype == :output && out_node.nodetype == :input
-            attempts += 1
-            continue
-        end
-
+        # Skip if connection already exists
         key = (in_node.id, out_node.id)
         if haskey(genome.connections, key)
             attempts += 1
             continue
         end
 
-        # Check for cycles: adding in_node → out_node should NOT create a path back to in_node
+        # Avoid cycles
         if causes_cycle(genome, in_node.id, out_node.id)
             println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
             attempts += 1
             continue
         end
 
+        # Add the connection
         innovation_number = next_innovation_number()
         genome.connections[key] = Connection(
             in_node.id,
