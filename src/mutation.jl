@@ -88,8 +88,15 @@ function add_connection!(genome::Genome)
             attempts += 1
             continue
         end
-
-        if in_node.nodetype == :output && out_node.nodetype == :input
+    
+       # Output cannot feed into input or other nodes
+        if in_node.nodetype == :output
+            attempts += 1
+            continue
+        end
+    
+        # Do not allow connections INTO input nodes
+        if out_node.nodetype == :input
             attempts += 1
             continue
         end
