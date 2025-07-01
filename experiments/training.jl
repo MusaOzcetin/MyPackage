@@ -20,8 +20,9 @@ Run a full NEAT training loop for the specified number of generations.
 # Returns
 - The final evolved population
 """
-function train(; pop_size=150, n_generations=100, input_size=2, output_size=1, speciation_threshold=0.3)
-
+function train(;
+    pop_size=150, n_generations=100, input_size=2, output_size=1, speciation_threshold=0.3
+)
     population = initialize_population(pop_size, input_size, output_size)
 
     for generation in 1:n_generations
@@ -36,45 +37,54 @@ function train(; pop_size=150, n_generations=100, input_size=2, output_size=1, s
 
         for (i, species) in enumerate(species_list)
             avg_fit = mean(g -> g.fitness, species)
-            println("Species $i: $(length(species)) genomes, average fitness $(round(avg_fit, digits=4))")
+            println(
+                "Species $i: $(length(species)) genomes, average fitness $(round(avg_fit, digits=4))",
+            )
         end
 
         adjust_fitness!(species_list)
 
-        
         offspring_counts = compute_offspring_counts(species_list, pop_size)
         println("Offspring counts: $offspring_counts")
 
-        
         new_population = Genome[]
         for (species, count) in zip(species_list, offspring_counts)
             if isempty(species)
                 continue
             end
 
-            
-            best = species[argmax([g.fitness for g in species])]
-            push!(new_population, best)
+            elites = select_elites(species, 1)  # 1 Elite per species
+            append!(new_population, elites)
 
             # Fill remaining slots with crossover + mutation
-            for _ in 2:count
-                parent1 = rand(species)
-                parent2 = rand(species)
-                child = crossover(parent1, parent2)
-                mutate(child)
-                push!(new_population, child)
+            remaining = count - length(elites)
+            if remaining > 0
+                # only if there are enough genomes to crossover
+                if length(species) > length(elites)
+                    parents = select_parents(species, remaining; exclude=Set(elites))
+                    for (parent1, parent2) in parents
+                        child = crossover(parent1, parent2)
+                        mutate(child)
+                        push!(new_population, child)
+                    end
+                else
+                    # fallback: clone elites if not enough parents
+                    for _ in 1:remaining
+                        clone = deepcopy(elites[1])
+                        mutate(clone)
+                        push!(new_population, clone)
+                    end
+                end
             end
         end
 
-        
         population = new_population
-
     end # for each generation
 
     return population
 end
 
-final_pop = train(pop_size=100, n_generations=50)
+final_pop = train(; pop_size=100, n_generations=50)
 
 println("Doooooooonnnnneeeeee")
 
