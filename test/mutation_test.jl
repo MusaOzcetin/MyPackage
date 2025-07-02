@@ -2,14 +2,7 @@ using Test
 using Neat
 using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
 
-using Test
-using Neat  # dein Hauptmodul, wie aus Neat.jl exportiert
-
 @testset "Mutation tests" begin
-
-    # Reset Innovation counter for consistent tests
-    reset_innovation_counter!()
-
     @testset "mutate_weights!" begin
         genome = create_genome(1, 2, 1)
         old_weights = [c.weight for c in values(genome.connections)]
