@@ -1,6 +1,56 @@
 using Test
 using Neat
-using Neat.Mutation: causes_cycle, add_connection!
+using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
+
+using Test
+using Neat  # dein Hauptmodul, wie aus Neat.jl exportiert
+
+@testset "Mutation tests" begin
+
+    # Reset Innovation counter for consistent tests
+    reset_innovation_counter!()
+
+    @testset "mutate_weights!" begin
+        genome = create_genome(1, 2, 1)
+        old_weights = [c.weight for c in values(genome.connections)]
+        mutate_weights!(genome; perturb_chance=1.0, sigma=0.1)
+        new_weights = [c.weight for c in values(genome.connections)]
+        @test any(abs.(old_weights .- new_weights) .> 0)
+    end
+
+    @testset "add_connection! with hidden node" begin
+        genome = create_genome(1, 2, 1)
+        add_node!(genome)
+        num_connections_before = length(genome.connections)
+        add_connection!(genome)
+        num_connections_after = length(genome.connections)
+        @test num_connections_after >= num_connections_before
+    end
+
+    @testset "add_node!" begin
+        genome = create_genome(1, 2, 1)
+        num_nodes_before = length(genome.nodes)
+        num_connections_before = length(genome.connections)
+        add_node!(genome)
+        num_nodes_after = length(genome.nodes)
+        num_connections_after = length(genome.connections)
+        @test num_nodes_after == num_nodes_before + 1
+        @test num_connections_after == num_connections_before + 2
+
+        num_disabled = count(!c.enabled for c in values(genome.connections))
+        @test num_disabled == 1
+    end
+
+    @testset "mutate (full)" begin
+        genome = create_genome(1, 2, 1)
+        mutate(genome)
+        @test length(genome.nodes) >= 3
+        @test all(
+            conn.in_node in keys(genome.nodes) && conn.out_node in keys(genome.nodes) for
+            conn in values(genome.connections)
+        )
+    end
+end
 
 @testset "add_connection! cycle prevention" begin
     genome = create_genome(1, 2, 1)
@@ -47,14 +97,13 @@ using Neat.Mutation: causes_cycle, add_connection!
 
     # TODO: delete this part before making it final
     println("Nodes in genome:")
-        for (id, node) in genome.nodes
-    println(" - ID $id : ", node.nodetype)
-        end
-       println("Connections in genome:")
-        for ((src, dst), conn) in genome.connections
-    println(" - $src → $dst (enabled=$(conn.enabled), weight=$(conn.weight))")
-        end
- 
+    for (id, node) in genome.nodes
+        println(" - ID $id : ", node.nodetype)
+    end
+    println("Connections in genome:")
+    for ((src, dst), conn) in genome.connections
+        println(" - $src → $dst (enabled=$(conn.enabled), weight=$(conn.weight))")
+    end
 
     # Assert that no cycle exists after all mutations
     @test !has_cycle(genome)
