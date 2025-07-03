@@ -144,13 +144,11 @@ function train(;
     # Letztes Best-Tracking
     println("\n=== Training done ===")
     println("Best genome appeared in generation $best_generation")
-    println("Best fitness: $global_best_fitness")
 
     for genome in population
         genome.fitness = evaluate_fitness(genome)
     end
 
-    # für späteren Zugriff
     global_best_genome_id = global_best_genome !== nothing ? global_best_genome.id : -1
     println("Best genome ID: $global_best_genome_id")
 
@@ -158,7 +156,7 @@ function train(;
 end
 
 final_pop, best_per_generation = train(;
-    pop_size=100, n_generations=300, speciation_threshold=1.0
+    pop_size=100, n_generations=500, speciation_threshold=1.0
 )
 
 println("Doooooooonnnnneeeeee")
