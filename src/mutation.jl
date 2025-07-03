@@ -58,7 +58,6 @@ function causes_cycle(genome::Genome, src_id::Int, dst_id::Int)::Bool
     return false
 end
 
-
 """
     add_connection!(genome::Genome)
 
@@ -88,13 +87,13 @@ function add_connection!(genome::Genome)
             attempts += 1
             continue
         end
-    
-       # Output cannot feed into input or other nodes
+
+        # Output cannot feed into input or other nodes
         if in_node.nodetype == :output
             attempts += 1
             continue
         end
-    
+
         # Do not allow connections INTO input nodes
         if out_node.nodetype == :input
             attempts += 1
@@ -109,23 +108,17 @@ function add_connection!(genome::Genome)
 
         # Check for cycles: adding in_node → out_node should NOT create a path back to in_node
         if causes_cycle(genome, in_node.id, out_node.id)
-            println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
             attempts += 1
             continue
         end
 
         innovation_number = next_innovation_number()
         genome.connections[key] = Connection(
-            in_node.id,
-            out_node.id,
-            randn(),
-            true,
-            innovation_number,
+            in_node.id, out_node.id, randn(), true, innovation_number
         )
         return nothing
     end
 end
-
 
 """
     add_node!(genome::Genome)
@@ -184,11 +177,11 @@ Applies all mutation operators to a genome.
 """
 function mutate(genome::Genome)
     mutate_weights!(genome)
-    if rand() < 0.05   #example value
+    if rand() < 0.25   #example value
         add_connection!(genome)
     end
 
-    if rand() < 0.03 #example value
+    if rand() < 0.1 #example value
         add_node!(genome)
     end
 end
