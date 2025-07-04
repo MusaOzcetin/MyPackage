@@ -1,11 +1,10 @@
 using Test
 using Neat
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
+using Neat.CreateGenome: create_genome
+using Neat.Mutation: mutate, mutate_weights!, add_connection!, add_node!
+using Neat.Types: Genome
 
-@testset "Mutation tests" begin
+@testset "Mutation Operators" begin
     @testset "mutate_weights!" begin
         genome = create_genome(1, 2, 1)
         old_weights = [c.weight for c in values(genome.connections)]
@@ -37,34 +36,21 @@ using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
         @test num_disabled == 1
     end
 
-    @testset "mutate (full)" begin
+    @testset "mutate (full pipeline)" begin
         genome = create_genome(1, 2, 1)
         mutate(genome)
         @test length(genome.nodes) >= 3
         @test all(
-            conn.in_node in keys(genome.nodes) && conn.out_node in keys(genome.nodes) for
-            conn in values(genome.connections)
+            conn.in_node in keys(genome.nodes) && conn.out_node in keys(genome.nodes)
+            for conn in values(genome.connections)
         )
     end
 end
-=======
-using Neat.Mutation: causes_cycle, add_connection!
->>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
-=======
-using Neat.CreateGenome: create_genome
-using Neat.Mutation: add_connection!
-using Neat.Types: Genome
->>>>>>> f610ce6 (Added bias and modified tests accordingly)
-=======
-using Neat.CreateGenome: create_genome
-using Neat.Mutation: add_connection!
-using Neat.Types: Genome
->>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
 
 @testset "add_connection! cycle prevention" begin
     genome = create_genome(1, 2, 1;
                            deterministic=true,
-                           weight_map=Dict{Tuple{Int, Int}, Float64}(),
+                           weight_map=Dict{Tuple{Int, Float64}}(),
                            fully_connect=false)
 
     success = true
@@ -78,7 +64,6 @@ using Neat.Types: Genome
     end
     @test success
 
-    # Check for cycle presence
     function has_cycle(genome::Genome)::Bool
         visited = Set{Int}()
         function dfs(node::Int, stack::Set{Int})
@@ -108,34 +93,6 @@ using Neat.Types: Genome
         return false
     end
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    # TODO: delete this part before making it final
-    println("Nodes in genome:")
-<<<<<<< HEAD
-    for (id, node) in genome.nodes
-        println(" - ID $id : ", node.nodetype)
-    end
-    println("Connections in genome:")
-    for ((src, dst), conn) in genome.connections
-        println(" - $src → $dst (enabled=$(conn.enabled), weight=$(conn.weight))")
-    end
-=======
-        for (id, node) in genome.nodes
-    println(" - ID $id : ", node.nodetype)
-        end
-       println("Connections in genome:")
-        for ((src, dst), conn) in genome.connections
-    println(" - $src → $dst (enabled=$(conn.enabled), weight=$(conn.weight))")
-        end
- 
->>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
-
-    # Assert that no cycle exists after all mutations
-=======
->>>>>>> f610ce6 (Added bias and modified tests accordingly)
-=======
->>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
     @test !has_cycle(genome)
 end
 
@@ -143,18 +100,16 @@ end
     num_inputs = 3
     num_outputs = 2
     bias_id = num_inputs + 1
-    weight_map = Dict{Tuple{Int, Int}, Float64}()
-
     genome = create_genome(2, num_inputs, num_outputs;
                            deterministic=true,
-                           weight_map=weight_map,
+                           weight_map=Dict{Tuple{Int, Int}, Float64}(),
                            fully_connect=false)
 
     original_connection_count = length(genome.connections)
     found_bias_connection = false
     added = false
 
-    for i in 1:200  # Try more times to increase odds
+    for i in 1:200
         add_connection!(genome)
         new_count = length(genome.connections)
 
@@ -163,7 +118,6 @@ end
             original_connection_count = new_count
         end
 
-        # Check new connections for bias usage
         for (src, dst) in keys(genome.connections)
             if src == bias_id && genome.nodes[dst].nodetype in (:hidden, :output)
                 found_bias_connection = true
@@ -176,10 +130,8 @@ end
         end
     end
 
-    @test added  # Ensure at least one connection was added
-
+    @test added
     @test found_bias_connection ||
         @warn "Bias node was not used in mutation after 200 attempts. Check bias eligibility in add_connection!"
-
     @test found_bias_connection
 end

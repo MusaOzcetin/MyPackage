@@ -24,6 +24,7 @@ const EMPTY_WEIGHT_MAP = Dict{Tuple{Int, Int}, Float64}()
     @test all(length(s) > 0 for s in species_list)
 end
 
+# A mock struct used to test select_elites and select_parents
 struct MockGenome
     adjusted_fitness::Float64
 end
@@ -107,10 +108,7 @@ end
         @test counts[2] > counts[1]  # more fit species gets more offspring
     end
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     @testset "select_elites tests" begin
-        # Create a species with known adjusted fitness values
         species = [
             MockGenome(0.9),
             MockGenome(0.3),
@@ -118,47 +116,30 @@ end
             MockGenome(0.5),
             MockGenome(0.8)
         ]
-    
-        elite_frac = 0.4  # Should select top 2 genomes (ceil(5 * 0.4) = 2)
+
+        elite_frac = 0.4
         elites = select_elites(species, elite_frac)
-    
+
         @test length(elites) == 2
         @test elites[1].adjusted_fitness ≥ elites[2].adjusted_fitness
         @test all(e.adjusted_fitness ≥ 0.7 for e in elites)
-    
-        # Edge case: elite fraction small but ensures at least one elite
+
         elites_one = select_elites(species, 0.01)
         @test length(elites_one) == 1
         @test elites_one[1].adjusted_fitness == maximum(g.adjusted_fitness for g in species)
     end
-=======
-=======
->>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
-    @testset "Selection Tests" begin
+
+    @testset "select_parents" begin
         genomes = [MockGenome(i) for i in 1:10]
+        elites = select_elites(genomes, 2)
+        parent_pairs = select_parents(genomes, 5; exclude=Set(elites))
 
-        @testset "select_elites" begin
-            elites = select_elites(genomes, 3)
-            @test length(elites) == 3
-            @test all(e in genomes for e in elites)
-            @test elites[1].adjusted_fitness ≥ elites[2].adjusted_fitness ≥ elites[3].adjusted_fitness
-        end
-
-        @testset "select_parents" begin
-            elites = select_elites(genomes, 2)
-            parent_pairs = select_parents(genomes, 5; exclude=Set(elites))
-            @test length(parent_pairs) == 5
-            for (p1, p2) in parent_pairs
-                @test !(p1 in elites)
-                @test !(p2 in elites)
-                @test p1 in genomes
-                @test p2 in genomes
-            end
+        @test length(parent_pairs) == 5
+        for (p1, p2) in parent_pairs
+            @test !(p1 in elites)
+            @test !(p2 in elites)
+            @test p1 in genomes
+            @test p2 in genomes
         end
     end
 end
-<<<<<<< HEAD
->>>>>>> 35fdd1b (Add select_elites and select_parents)
-end
-=======
->>>>>>> f610ce6 (Added bias and modified tests accordingly)
