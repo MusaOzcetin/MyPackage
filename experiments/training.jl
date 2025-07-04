@@ -21,7 +21,12 @@ Run a full NEAT training loop for the specified number of generations.
 - The final evolved population
 """
 function train(;
-    pop_size=150, n_generations=100, input_size=2, output_size=1, speciation_threshold=0.3, elite_frac=0.6,
+    pop_size=150,
+    n_generations=100,
+    input_size=2,
+    output_size=1,
+    speciation_threshold=0.3,
+    elite_frac=0.6,
 )
     population = initialize_population(pop_size, input_size, output_size)
 
@@ -53,16 +58,21 @@ function train(;
                 continue
             end
 
-            elites = select_elites(species, elite_frac) 
-            mating_pool = length(elites) >= 2 ? elites : species 
+            elites = select_elites(species, elite_frac)
+            mating_pool = length(elites) >= 2 ? elites : species
 
             for _ in 1:count
                 parent1, parent2 = rand(mating_pool, 2)
                 child = crossover(parent1, parent2)
-                mutate(child)
-                push!(new_population, child)
+                if child === nothing
+                    fallback = deepcopy(parent1)
+                    mutate(fallback)
+                    push!(new_population, fallback)
+                else
+                    mutate(child)
+                    push!(new_population, child)
+                end
             end
-
         end
 
         population = new_population
