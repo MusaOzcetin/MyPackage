@@ -58,7 +58,6 @@ function causes_cycle(genome::Genome, src_id::Int, dst_id::Int)::Bool
     return false
 end
 
-
 """
     add_connection!(genome::Genome)
 
@@ -88,13 +87,13 @@ function add_connection!(genome::Genome)
             attempts += 1
             continue
         end
-    
-       # Output cannot feed into input or other nodes
+
+        # Output cannot feed into input or other nodes
         if in_node.nodetype == :output
             attempts += 1
             continue
         end
-    
+
         # Do not allow connections INTO input nodes
         if out_node.nodetype == :input
             attempts += 1
@@ -109,23 +108,20 @@ function add_connection!(genome::Genome)
 
         # Check for cycles: adding in_node → out_node should NOT create a path back to in_node
         if causes_cycle(genome, in_node.id, out_node.id)
-            #println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
+            println(
+                "REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk"
+            )
             attempts += 1
             continue
         end
 
-        innovation_number = next_innovation_number()
+        innovation_number = get_innovation_number(in_node.id, out_node.id)
         genome.connections[key] = Connection(
-            in_node.id,
-            out_node.id,
-            randn(),
-            true,
-            innovation_number,
+            in_node.id, out_node.id, randn(), true, innovation_number
         )
         return nothing
     end
 end
-
 
 """
     add_node!(genome::Genome)
@@ -166,12 +162,12 @@ function add_node!(genome::Genome)
     new_node_id = maximum(existing_ids) + 1
     genome.nodes[new_node_id] = Node(new_node_id, :hidden)      #create new genome
 
-    new_innov1 = next_innovation_number()
+    new_innov1 = get_innovation_number(old_conn.in_node, new_node_id)
     genome.connections[(old_conn.in_node, new_node_id)] = Connection(
         old_conn.in_node, new_node_id, 1.0, true, new_innov1
     ) #new connection old_node_a -> new node
 
-    new_innov2 = next_innovation_number()
+    new_innov2 = get_innovation_number(new_node_id, old_conn.out_node)
     return genome.connections[(new_node_id, old_conn.out_node)] = Connection(
         new_node_id, old_conn.out_node, old_conn.weight, true, new_innov2
     ) #new connection new node -> old_node_b

@@ -28,14 +28,14 @@ export Genome,
     forward_pass,
     evaluate_fitness,
     initialize_population,
-    next_innovation_number,
+    get_innovation_number,
     reset_innovation_counter!,
     mutate,
     crossover,
     compatibility_distance,
     assign_species!,
     adjust_fitness!,
-    compute_offspring_counts, 
+    compute_offspring_counts,
     select_elites
-    
+
 end # module

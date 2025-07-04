@@ -23,7 +23,7 @@ end
 Resets the counter (useful for tests).
 """
 function reset_innovation_counter!()
-    innovation_counter[] = 3
+    return innovation_counter[] = 3
 end
 
 end
