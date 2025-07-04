@@ -21,7 +21,7 @@ Disabled genes may remain disabled in the child.
 # Returns
 - `Genome`: A new child genome composed from both parents' genes.
 """
-function crossover(parent1::Genome, parent2::Genome)::Union{Genome,Nothing}
+function crossover(parent1::Genome, parent2::Genome)::Genome
     # Ensure parent1 is the fitter (or equal fitness: keep order)
     if parent2.fitness > parent1.fitness
         parent1, parent2 = parent2, parent1
@@ -91,7 +91,7 @@ function crossover(parent1::Genome, parent2::Genome)::Union{Genome,Nothing}
         return genome_try
     catch ex
         @warn "crossover: child contains cycles; crossover aborted" exception = ex
-        return nothing
+        return parent1
     end
 end
 

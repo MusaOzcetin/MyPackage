@@ -64,14 +64,8 @@ function train(;
             for _ in 1:count
                 parent1, parent2 = rand(mating_pool, 2)
                 child = crossover(parent1, parent2)
-                if child === nothing
-                    fallback = deepcopy(parent1)
-                    mutate(fallback)
-                    push!(new_population, fallback)
-                else
-                    mutate(child)
-                    push!(new_population, child)
-                end
+                mutate(child)
+                push!(new_population, child)
             end
         end
 
