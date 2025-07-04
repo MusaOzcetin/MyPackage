@@ -66,7 +66,6 @@ function train(;
             genome.fitness = evaluate_fitness(genome)
         end
 
-        # nachdem du allen genomes ihre fitness gegeben hast
         best_in_gen = argmax(g -> g.fitness, population)
         push!(best_per_generation, deepcopy(best_in_gen))
 
@@ -141,7 +140,6 @@ function train(;
         population = new_population
     end # generation loop
 
-    # Letztes Best-Tracking
     println("\n=== Training done ===")
     println("Best genome appeared in generation $best_generation")
 
@@ -156,7 +154,7 @@ function train(;
 end
 
 final_pop, best_per_generation = train(;
-    pop_size=100, n_generations=500, speciation_threshold=1.0
+    pop_size=100, n_generations=2000, speciation_threshold=1.0
 )
 
 println("Doooooooonnnnneeeeee")
