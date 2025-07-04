@@ -1,6 +1,8 @@
 # src/Neat.jl
 module Neat
 
+using Random
+
 include("genome.jl")
 include("create_genome.jl")
 include("forward_pass.jl")
