@@ -108,9 +108,7 @@ function add_connection!(genome::Genome)
 
         # Check for cycles: adding in_node → out_node should NOT create a path back to in_node
         if causes_cycle(genome, in_node.id, out_node.id)
-            println(
-                "REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk"
-            )
+            #  println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
             attempts += 1
             continue
         end
