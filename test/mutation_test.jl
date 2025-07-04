@@ -2,6 +2,7 @@ using Test
 using Neat
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
 
 @testset "Mutation tests" begin
@@ -54,6 +55,11 @@ using Neat.CreateGenome: create_genome
 using Neat.Mutation: add_connection!
 using Neat.Types: Genome
 >>>>>>> f610ce6 (Added bias and modified tests accordingly)
+=======
+using Neat.CreateGenome: create_genome
+using Neat.Mutation: add_connection!
+using Neat.Types: Genome
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
 
 @testset "add_connection! cycle prevention" begin
     genome = create_genome(1, 2, 1;
@@ -103,6 +109,7 @@ using Neat.Types: Genome
     end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     # TODO: delete this part before making it final
     println("Nodes in genome:")
 <<<<<<< HEAD
@@ -127,6 +134,8 @@ using Neat.Types: Genome
     # Assert that no cycle exists after all mutations
 =======
 >>>>>>> f610ce6 (Added bias and modified tests accordingly)
+=======
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
     @test !has_cycle(genome)
 end
 

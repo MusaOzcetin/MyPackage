@@ -95,6 +95,7 @@ function add_connection!(genome::Genome)
 
         # Avoid self-loops
         if in_node.id == out_node.id
+<<<<<<< HEAD
             attempts += 1
             continue
         end
@@ -113,13 +114,19 @@ function add_connection!(genome::Genome)
 <<<<<<< HEAD
         if in_node.nodetype == :output && out_node.nodetype == :input
 >>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
+=======
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
             attempts += 1
             continue
         end
 
+<<<<<<< HEAD
 =======
         # Skip if connection already exists
 >>>>>>> f610ce6 (Added bias and modified tests accordingly)
+=======
+        # Skip if connection already exists
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
         key = (in_node.id, out_node.id)
         if haskey(genome.connections, key)
             attempts += 1
@@ -129,10 +136,14 @@ function add_connection!(genome::Genome)
         # Avoid cycles
         if causes_cycle(genome, in_node.id, out_node.id)
 <<<<<<< HEAD
+<<<<<<< HEAD
             #println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
 =======
             println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
 >>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
+=======
+            println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
             attempts += 1
             continue
         end

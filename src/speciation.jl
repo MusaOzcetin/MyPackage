@@ -215,6 +215,7 @@ end
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 """
     select_elites(species::Vector{T}, elite_frac::Float64) where {T}
@@ -260,6 +261,26 @@ function select_elites(species::Vector{T}, num_elites::Int) where {T}
     return sorted[1:min(num_elites, length(sorted))]
 end
 
+=======
+
+"""
+    select_elites(species::Vector{T}, num_elites::Int) where T
+
+Selects the top `num_elites` genomes from the given species based on their `adjusted_fitness`.
+
+# Arguments
+- `species`: a vector of individuals (e.g., Genomes) that have an `adjusted_fitness` field.
+- `num_elites`: how many of the top individuals to select.
+
+# Returns
+- A vector of the top-performing individuals, sorted by descending `adjusted_fitness`.
+"""
+function select_elites(species::Vector{T}, num_elites::Int) where {T}
+    sorted = sort(species, by = g -> g.adjusted_fitness, rev = true)
+    return sorted[1:min(num_elites, length(sorted))]
+end
+
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
 
 """
     select_parents(species::Vector{T}, num_parents::Int; exclude::Set{T}=Set()) where T
@@ -298,6 +319,9 @@ function select_parents(species::Vector{T}, num_parents::Int; exclude::Set{T}=Se
 end
 
 export select_elites, select_parents
+<<<<<<< HEAD
 >>>>>>> 35fdd1b (Add select_elites and select_parents)
+=======
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
 
 end

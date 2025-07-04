@@ -1,6 +1,7 @@
 using Test
 using Neat
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 @testset "forward_pass" begin
     # --- Create dummy nodes ---
@@ -13,6 +14,12 @@ using Neat.CreateGenome
 using Neat.ForwardPass
 
 @testset "forward_pass" begin
+=======
+using Neat.CreateGenome
+using Neat.ForwardPass
+
+@testset "forward_pass" begin
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
     # Create a minimal genome with 2 inputs, 1 bias, and 1 output (node 4)
     nodes = Dict(
         1 => Node(1, :input),
@@ -25,6 +32,7 @@ using Neat.ForwardPass
         (1, 4) => Connection(1, 4, 0.5, true, 1),
         (2, 4) => Connection(2, 4, -1.0, true, 2),
         (3, 4) => Connection(3, 4, 1.0, true, 3)  # bias → output
+<<<<<<< HEAD
 >>>>>>> f610ce6 (Added bias and modified tests accordingly)
     )
 
@@ -67,6 +75,17 @@ using Neat.ForwardPass
     expected_sum = 2.0 * 0.5 + 1.0 * -1.0 + 1.0 * 1.0
     expected_output = 1.0 / (1.0 + exp(-expected_sum))
 
+=======
+    )
+
+    genome = Genome(1, nodes, connections, 0.0, 0.0)
+    input = [2.0, 1.0]  # input[1] to node 1, input[2] to node 2
+
+    # Expected sum: 2*0.5 + 1*-1.0 + 1*1.0 = 1.0 → sigmoid(1.0)
+    expected_sum = 2.0 * 0.5 + 1.0 * -1.0 + 1.0 * 1.0
+    expected_output = 1.0 / (1.0 + exp(-expected_sum))
+
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
     output = forward_pass(genome, input)
     @test isapprox(output, expected_output; atol=1e-6)
 >>>>>>> f610ce6 (Added bias and modified tests accordingly)

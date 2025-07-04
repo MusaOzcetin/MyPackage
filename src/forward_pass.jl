@@ -8,6 +8,7 @@ export forward_pass
     forward_pass(genome::Genome, input::Vector{Float64}) → Dict{Int, Float64}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Performs a forward pass through the network defined by `genome`, computing activation values for all nodes.
 
 # Arguments
@@ -21,10 +22,19 @@ Handles input, bias, and output nodes. Supports any number of inputs or outputs 
 - `genome::Genome`: The genome containing nodes and connections.
 - `input::Vector{Float64}`: A vector of input values.
 >>>>>>> f610ce6 (Added bias and modified tests accordingly)
+=======
+Compute the output of a simple feedforward network defined by `genome`.  
+Handles input, bias, and output nodes. Supports any number of inputs or outputs (but assumes only one output).
+
+# Arguments
+- `genome::Genome`: The genome containing nodes and connections.
+- `input::Vector{Float64}`: A vector of input values.
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
 
 # Returns
 - `Dict{Int, Float64}`: A dictionary mapping each node ID to its activation value.
 """
+<<<<<<< HEAD
 <<<<<<< HEAD
 function forward_pass(genome::Genome, input::Vector{Float64})::Dict{Int, Float64}
     # Determine evaluation order via topological sorting
@@ -138,6 +148,25 @@ function forward_pass(genome::Genome, input::Vector{Float64})::Float64
         end
     end
 
+=======
+function forward_pass(genome::Genome, input::Vector{Float64})::Float64
+    activations = Dict{Int, Float64}()
+
+    # Assign input activations (sorted to match input order)
+    input_ids = sort([id for (id, node) in genome.nodes if node.nodetype == :input])
+    @assert length(input_ids) == length(input) "Mismatch between input nodes and values"
+    for (i, id) in enumerate(input_ids)
+        activations[id] = input[i]
+    end
+
+    # Bias node outputs 1.0
+    for node in values(genome.nodes)
+        if node.nodetype == :bias
+            activations[node.id] = 1.0
+        end
+    end
+
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
     # Assume one output node
     output_id = first([id for (id, node) in genome.nodes if node.nodetype == :output])
     output_sum = 0.0
@@ -150,7 +179,10 @@ function forward_pass(genome::Genome, input::Vector{Float64})::Float64
     end
 
     return 1.0 / (1.0 + exp(-output_sum))  # sigmoid
+<<<<<<< HEAD
 >>>>>>> f610ce6 (Added bias and modified tests accordingly)
+=======
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
 end
 
 end # module ForwardPass

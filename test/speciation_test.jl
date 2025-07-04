@@ -108,6 +108,7 @@ end
     end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     @testset "select_elites tests" begin
         # Create a species with known adjusted fitness values
         species = [
@@ -131,6 +132,8 @@ end
         @test elites_one[1].adjusted_fitness == maximum(g.adjusted_fitness for g in species)
     end
 =======
+=======
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
     @testset "Selection Tests" begin
         genomes = [MockGenome(i) for i in 1:10]
 
