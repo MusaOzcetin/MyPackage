@@ -3,7 +3,7 @@ using Neat
 
 @testset "create_genome" begin
     # Example: 2 inputs, 1 output
-    genome = Neat.CreateGenome.create_genome(1, 2, 1)
+    genome = Neat.CreateGenome.create_genome(2, 1)
 
 
     # --- Check Genome Type and Fields ---

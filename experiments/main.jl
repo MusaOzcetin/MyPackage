@@ -7,7 +7,7 @@ import Neat: create_genome, evaluate_fitness, initialize_population, mutate
 
 # Test create_genome
 println("=== Test create_genome ===")
-genome = create_genome(1, 2, 1)
+genome = create_genome(2, 1)
 
 println("Genome ID: ", genome.id)
 println("Number of Nodes: ", length(genome.nodes))

@@ -9,8 +9,8 @@ end
 @testset "Speciation" begin
 
     @testset "compatibility_distance" begin
-        g1 = create_genome(1, 2, 1)
-        g2 = create_genome(2, 2, 1)
+        g1 = create_genome(2, 1)
+        g2 = create_genome(2, 1)
 
         d = compatibility_distance(g1, g2)
         @test isa(d, Float64)
@@ -18,7 +18,7 @@ end
     end
 
     @testset "assign_species!" begin
-        pop = [create_genome(i, 2, 1) for i in 1:4]
+        pop = [create_genome(2, 1) for _ in 1:4]
         for g in pop
             g.fitness = evaluate_fitness(g)
         end
@@ -31,7 +31,7 @@ end
     end
 
     @testset "adjust_fitness!" begin
-        pop = [create_genome(i, 2, 1) for i in 1:3]
+        pop = [create_genome(2, 1) for _ in 1:3]
         for g in pop
             g.fitness = -1.0
         end
@@ -46,9 +46,9 @@ end
     end
 
     @testset "compute_offspring_counts" begin
-        g1 = create_genome(1, 2, 1)
-        g2 = create_genome(2, 2, 1)
-        g3 = create_genome(3, 2, 1)
+        g1 = create_genome(2, 1)
+        g2 = create_genome(2, 1)
+        g3 = create_genome(2, 1)
         g1.fitness = 2.0
         g2.fitness = 2.0
         g3.fitness = 6.0

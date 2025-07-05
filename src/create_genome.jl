@@ -8,7 +8,7 @@ export next_genome_id
 const genome_id_counter = Ref(1)
 
 """
-    create_genome(id::Int, num_inputs::Int, num_outputs::Int) → Genome
+    create_genome(num_inputs::Int, num_outputs::Int) → Genome
 
 Creates a `Genome` with:
 - The specified number of input nodes
@@ -18,14 +18,13 @@ Creates a `Genome` with:
 NO HIDDEN NODES ARE CREATED INITIALLY
 
 # Arguments
-- `id::Int`: Unique genome ID.
 - `num_inputs::Int`: Number of input nodes.
 - `num_outputs::Int`: Number of output nodes.
 
 # Returns
 - `Genome`: A new genome with nodes and fully connected input-output links.
 """
-function create_genome(id::Int, num_inputs::Int, num_outputs::Int)::Genome
+function create_genome(num_inputs::Int, num_outputs::Int)::Genome
     nodes = Dict{Int,Node}()
     connections = Dict{Tuple{Int,Int},Connection}()
 

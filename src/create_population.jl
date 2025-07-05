@@ -22,7 +22,7 @@ Each genome is assigned a unique ID.
 function initialize_population(n::Int, num_inputs::Int, num_outputs::Int)
     population = Vector{Genome}(undef, n)
     for i in 1:n
-        population[i] = create_genome(i, num_inputs, num_outputs)
+        population[i] = create_genome(num_inputs, num_outputs)
     end
     return population
 end

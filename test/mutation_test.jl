@@ -4,7 +4,7 @@ using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
 
 @testset "Mutation tests" begin
     @testset "mutate_weights!" begin
-        genome = create_genome(1, 2, 1)
+        genome = create_genome(2, 1)
         old_weights = [c.weight for c in values(genome.connections)]
         mutate_weights!(genome; perturb_chance=1.0, sigma=0.1)
         new_weights = [c.weight for c in values(genome.connections)]
@@ -12,7 +12,7 @@ using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
     end
 
     @testset "add_connection! with hidden node" begin
-        genome = create_genome(1, 2, 1)
+        genome = create_genome(2, 1)
         add_node!(genome)
         num_connections_before = length(genome.connections)
         add_connection!(genome)
@@ -21,7 +21,7 @@ using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
     end
 
     @testset "add_node!" begin
-        genome = create_genome(1, 2, 1)
+        genome = create_genome(2, 1)
         num_nodes_before = length(genome.nodes)
         num_connections_before = length(genome.connections)
         add_node!(genome)
@@ -35,7 +35,7 @@ using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
     end
 
     @testset "mutate (full)" begin
-        genome = create_genome(1, 2, 1)
+        genome = create_genome(2, 1)
         mutate(genome)
         @test length(genome.nodes) >= 3
         @test all(
@@ -46,7 +46,7 @@ using Neat.Mutation: causes_cycle, add_connection!, add_node!, mutate_weights!
 end
 
 @testset "add_connection! cycle prevention" begin
-    genome = create_genome(1, 2, 1)
+    genome = create_genome(2, 1)
 
     # Apply many connection mutations
     for _ in 1:50

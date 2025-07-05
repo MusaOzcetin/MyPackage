@@ -16,7 +16,7 @@ This package defines the basic building blocks of a NEAT genome:
 
 - **CreateGenome**
 
-  - `create_genome(id, num_inputs, num_outputs)`
+  - `create_genome(num_inputs, num_outputs)`
   - Builds a new genome with `num_inputs` input nodes, `num_outputs` output nodes, and two initial random connections from inputs → first output.
 
 - **ForwardPass**
