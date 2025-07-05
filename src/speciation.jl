@@ -7,6 +7,7 @@ export compatibility_distance
 export assign_species!
 export adjust_fitness!
 export compute_offspring_counts
+export select_elites
 
 """
     compatibility_distance(g1::Genome, g2::Genome;
