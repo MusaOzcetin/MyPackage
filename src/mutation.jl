@@ -81,13 +81,25 @@ function add_connection!(genome::Genome)
     max_attempts = 50
 
     while attempts < max_attempts
-        in_node = rand(nodes)
-        out_node = rand(nodes)
+        # Filter valid sources and targets
+        possible_sources = filter(n -> n.nodetype in (:input, :bias, :hidden), nodes)
+        possible_targets = filter(n -> n.nodetype in (:hidden, :output), nodes)
 
+        # If no valid pairs, abort early
+        if isempty(possible_sources) || isempty(possible_targets)
+            return nothing
+        end
+
+        in_node = rand(possible_sources)
+        out_node = rand(possible_targets)
+
+        # Avoid self-loops
         if in_node.id == out_node.id
+<<<<<<< HEAD
             attempts += 1
             continue
         end
+<<<<<<< HEAD
     
        # Output cannot feed into input or other nodes
         if in_node.nodetype == :output
@@ -97,24 +109,47 @@ function add_connection!(genome::Genome)
     
         # Do not allow connections INTO input nodes
         if out_node.nodetype == :input
+=======
+
+<<<<<<< HEAD
+        if in_node.nodetype == :output && out_node.nodetype == :input
+>>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
+=======
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
             attempts += 1
             continue
         end
 
+<<<<<<< HEAD
+=======
+        # Skip if connection already exists
+>>>>>>> f610ce6 (Added bias and modified tests accordingly)
+=======
+        # Skip if connection already exists
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
         key = (in_node.id, out_node.id)
         if haskey(genome.connections, key)
             attempts += 1
             continue
         end
 
-        # Check for cycles: adding in_node → out_node should NOT create a path back to in_node
+        # Avoid cycles
         if causes_cycle(genome, in_node.id, out_node.id)
+<<<<<<< HEAD
+<<<<<<< HEAD
             #println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
+=======
+            println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
+>>>>>>> ac9760e (fixed cycle logic and added mutation_test.jl)
+=======
+            println("REJECTING connection $(in_node.id) -> $(out_node.id) due to cycle risk")
+>>>>>>> 7e7303f5732b09d3f06ee3cfd775bc44561e1693
             attempts += 1
             continue
         end
 
-        innovation_number = next_innovation_number()
+        # Add the connection
+        innovation_number = get_innovation_number(in_node.id, out_node.id)
         genome.connections[key] = Connection(
             in_node.id,
             out_node.id,
@@ -166,12 +201,14 @@ function add_node!(genome::Genome)
     new_node_id = maximum(existing_ids) + 1
     genome.nodes[new_node_id] = Node(new_node_id, :hidden)      #create new genome
 
-    new_innov1 = next_innovation_number()
+    new_innov1 = get_innovation_number(old_conn.in_node, new_node_id)
+
     genome.connections[(old_conn.in_node, new_node_id)] = Connection(
         old_conn.in_node, new_node_id, 1.0, true, new_innov1
     ) #new connection old_node_a -> new node
 
-    new_innov2 = next_innovation_number()
+    new_innov2 = get_innovation_number(new_node_id, old_conn.out_node)
+
     return genome.connections[(new_node_id, old_conn.out_node)] = Connection(
         new_node_id, old_conn.out_node, old_conn.weight, true, new_innov2
     ) #new connection new node -> old_node_b
