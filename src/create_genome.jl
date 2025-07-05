@@ -1,6 +1,8 @@
 module CreateGenome
 
 using ..Types
+using ..Innovation: get_innovation_number  # <-- Add this line
+
 export create_genome
 
 """
@@ -37,19 +39,15 @@ function create_genome(id::Int, num_inputs::Int, num_outputs::Int)::Genome
     end
 
     # Fully connect every input to every output with random weights
-    innov = 1  # Innovation numbers start at 1
     for i in 1:num_inputs
         for j in 1:num_outputs
             out_id = num_inputs + j
-            connections[(i, out_id)] = Connection(i, out_id, randn(), true, innov)
-            innov += 1
+            innovation = get_innovation_number(i, out_id)  # <-- Use proper innovation tracking
+            connections[(i, out_id)] = Connection(i, out_id, randn(), true, innovation)
         end
     end
 
-    # Added adjusted_fitness initialized to 0.0
     return Genome(id, nodes, connections, 0.0, 0.0)
 end
 
-
 end # module
-
