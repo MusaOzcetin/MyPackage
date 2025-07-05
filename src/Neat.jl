@@ -10,12 +10,14 @@ include("innovation.jl")
 include("mutation.jl")
 include("crossover.jl")
 include("speciation.jl")
+include("champion.jl")
 
 using .Types
 using .CreateGenome
 using .ForwardPass
 using .Fitness
 using .Population
+using .Champion
 using .Innovation
 using .Mutation
 using .Crossover
@@ -37,6 +39,7 @@ export Genome,
     adjust_fitness!,
     compute_offspring_counts,
     select_elites,
-    next_genome_id
+    next_genome_id,
+    preserve_champion!
 
 end # module
