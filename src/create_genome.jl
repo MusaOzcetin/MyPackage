@@ -5,7 +5,7 @@ export create_genome
 export next_genome_id
 
 #global genome_id tracker
-const genome_id_counter = Ref(1)
+const genome_id_counter = Ref(0)
 
 """
     create_genome(num_inputs::Int, num_outputs::Int) → Genome
@@ -59,19 +59,14 @@ end
 
 Returns the next global node id.
 """
-function next_genome_id()::Int
-    val = genome_id_counter[]
-    genome_id_counter[] += 1
-    return val
-end
+next_genome_id()   = (genome_id_counter[] += 1; genome_id_counter[])
 
 """
     reset_id!()
 
 Resets the counter (useful for tests).
 """
-function reset_genome_id!()
-    genome_id_counter[] = 1
-end
+reset_genome_id!() = (genome_id_counter[] = 0)
+
 
 end # module
