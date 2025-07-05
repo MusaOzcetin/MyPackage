@@ -54,6 +54,12 @@ function create_genome(id::Int, num_inputs::Int, num_outputs::Int)::Genome
     return Genome(next_genome_id(), nodes, connections, 0.0, 0.0)
 end
 
+
+"""
+    next_genome_id() → Int
+
+Returns the next global node id.
+"""
 function next_genome_id()::Int
     val = genome_id_counter[]
     genome_id_counter[] += 1
