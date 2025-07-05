@@ -2,6 +2,10 @@ module CreateGenome
 
 using ..Types
 export create_genome
+export next_id
+
+#global genome_id tracker
+const genome_id_counter = Ref(1)
 
 """
     create_genome(id::Int, num_inputs::Int, num_outputs::Int) → Genome
@@ -22,8 +26,8 @@ NO HIDDEN NODES ARE CREATED INITIALLY
 - `Genome`: A new genome with nodes and fully connected input-output links.
 """
 function create_genome(id::Int, num_inputs::Int, num_outputs::Int)::Genome
-    nodes = Dict{Int, Node}()
-    connections = Dict{Tuple{Int, Int}, Connection}()
+    nodes = Dict{Int,Node}()
+    connections = Dict{Tuple{Int,Int},Connection}()
 
     # Create input nodes
     for i in 1:num_inputs
@@ -47,9 +51,22 @@ function create_genome(id::Int, num_inputs::Int, num_outputs::Int)::Genome
     end
 
     # Added adjusted_fitness initialized to 0.0
-    return Genome(id, nodes, connections, 0.0, 0.0)
+    return Genome(next_id(), nodes, connections, 0.0, 0.0)
 end
 
+function next_id()::Int
+    val = genome_id_counter[]
+    genome_id_counter[] += 1
+    return val
+end
+
+"""
+    reset_innovation_counter!()
+
+Resets the counter (useful for tests).
+"""
+function reset_id!()
+    genome_id_counter[] = 1
+end
 
 end # module
-
