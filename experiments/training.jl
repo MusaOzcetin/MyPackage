@@ -1,7 +1,7 @@
 using Pkg
 Pkg.activate("../")
 
-using Neat: initialize_population, evaluate_fitness, mutate, crossover
+using Neat: initialize_population, evaluate_fitness, mutate, crossover, forward_pass
 using Neat.Types: Genome
 using Neat.Speciation: assign_species!, select_elites, adjust_fitness!, compute_offspring_counts
 using Random
@@ -59,7 +59,8 @@ final_pop = train(; pop_size=10, n_generations=10, speciation_threshold=3.0)
 println("✅ Training complete!")
 
 idx = argmax(g -> g.fitness, final_pop)
-best = final_pop[idx]
+#best = final_pop[idx]
+best = argmax(g -> g.fitness, final_pop)  
 println("🏆 Best fitness: ", best.fitness)
 
 # Optional XOR Test
