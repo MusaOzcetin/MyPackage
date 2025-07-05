@@ -1,7 +1,7 @@
 module Mutation
 
 using ..Types
-using ..Innovation
+using ..Innovation: get_innovation_number
 using Random
 
 export mutate_weights!, mutate, add_connection!, add_node!, causes_cycle

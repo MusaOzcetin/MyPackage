@@ -65,7 +65,7 @@ hcat(xor_inputs, xor_outputs)
 ### Interactive Population Initialization
 
 # ╔═╡ 00e33db8-d9b2-4ae6-966b-23071cc2a686
-@bind population_size Slider(4:2:20, show_value=true)
+@bind population_size Slider(4:2:1000, show_value=true)
 
 # ╔═╡ e33341f6-df6e-4b0a-87b9-a20d269dff91
 import Neat
@@ -121,13 +121,27 @@ population
 # ╔═╡ 23a6a78c-777c-4583-b8c6-fe8d5c60d6e1
 @bind generations Slider(1:200, show_value=true)
 
+# ╔═╡ 08a60613-6e76-42f6-a088-6b782c2448ca
+evolution_snapshots = Dict{Int, Neat.Genome}()
+
 # ╔═╡ 1f60a448-31b9-4168-8002-750a7a958ee6
 for i in 1:generations
     for g in population
         mutate(g)
         g.fitness = evaluate_fitness(g)
     end
+
+    if i % 10 == 0
+        best_genome = sort(population, by=g->g.fitness, rev=true)[1]
+        evolution_snapshots[i] = deepcopy(best_genome)
+    end
 end
+
+# ╔═╡ 0f6d5488-30f5-4adb-b913-a0fe4d1b7617
+@bind snapshot_gen Slider(10:10:generations, show_value=true)
+
+# ╔═╡ 1bdc6487-798f-4435-8c42-2aa116a5cd49
+plot_genome_topology(evolution_snapshots[snapshot_gen])
 
 # ╔═╡ 78fa6f2c-85a0-4583-b9f5-a3c1efcaf216
 fitness_values = [g.fitness for g in population]
@@ -168,7 +182,10 @@ end
 # ╠═365f4f6e-c1b6-4796-8747-2d6feb5ffbed
 # ╠═c7eda833-e0ea-4927-954c-4db3972b5423
 # ╠═23a6a78c-777c-4583-b8c6-fe8d5c60d6e1
+# ╠═08a60613-6e76-42f6-a088-6b782c2448ca
 # ╠═1f60a448-31b9-4168-8002-750a7a958ee6
+# ╠═0f6d5488-30f5-4adb-b913-a0fe4d1b7617
+# ╠═1bdc6487-798f-4435-8c42-2aa116a5cd49
 # ╠═78fa6f2c-85a0-4583-b9f5-a3c1efcaf216
 # ╠═c89f5dd9-1840-4cf9-9b42-5f59121b3c85
 # ╠═595ccb02-7787-4890-81bb-c8d5aa930b15

@@ -1,25 +1,12 @@
 using Pkg
 Pkg.activate("../")
 
-using Neat
+using Neat: initialize_population, evaluate_fitness, mutate, crossover
+using Neat.Types: Genome
+using Neat.Speciation: assign_species!, select_elites, adjust_fitness!, compute_offspring_counts
 using Random
 using Statistics
 
-"""
-    train(; pop_size=150, n_generations=100, input_size=2, output_size=1, speciation_threshold=0.3)
-
-Run a full NEAT training loop for the specified number of generations.
-
-# Keyword Arguments
-- `pop_size`: Number of genomes in the population
-- `n_generations`: Number of generations to evolve
-- `input_size`: Number of input nodes per genome
-- `output_size`: Number of output nodes per genome
-- `speciation_threshold`: Compatibility threshold for species assignment
-
-# Returns
-- The final evolved population
-"""
 function train(;
     pop_size=150,
     n_generations=100,
@@ -31,24 +18,13 @@ function train(;
     population = initialize_population(pop_size, input_size, output_size)
 
     for generation in 1:n_generations
-        #println("\n=== Generation $generation ===")
-
         for genome in population
             genome.fitness = evaluate_fitness(genome)
         end
 
         species_list = Vector{Vector{Genome}}()
         assign_species!(population, species_list; threshold=speciation_threshold)
-
-        for (i, species) in enumerate(species_list)
-            avg_fit = mean(g -> g.fitness, species)
-            #println(
-            #    "Species $i: $(length(species)) genomes, average fitness $(round(avg_fit, digits=4))",
-            #)
-        end
-
         adjust_fitness!(species_list)
-
         offspring_counts = compute_offspring_counts(species_list, pop_size)
 
         new_population = Genome[]
@@ -69,7 +45,7 @@ function train(;
         end
 
         population = new_population
-    end # for each generation
+    end
 
     for genome in population
         genome.fitness = evaluate_fitness(genome)
@@ -80,8 +56,17 @@ end
 
 final_pop = train(; pop_size=10, n_generations=10, speciation_threshold=3.0)
 
-println("Doooooooonnnnneeeeee")
+println("✅ Training complete!")
 
 idx = argmax(g -> g.fitness, final_pop)
-best = idx
-println("Best fitness: ", best.fitness)
+best = final_pop[idx]
+println("🏆 Best fitness: ", best.fitness)
+
+# Optional XOR Test
+xor_inputs = [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]]
+xor_outputs = [0.0, 1.0, 1.0, 0.0]
+
+for (x, y) in zip(xor_inputs, xor_outputs)
+    prediction = forward_pass(best, x)[1]
+    println("Input: ", x, " => Predicted: ", round(prediction, digits=2), " | Expected: ", y)
+end
