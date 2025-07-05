@@ -3,7 +3,7 @@ module Crossover
 using ..Types
 using ..ForwardPass
 using Random
-using ..CreateGenome: next_id
+using ..CreateGenome: next_genome_id
 
 export crossover
 
@@ -85,7 +85,7 @@ function crossover(parent1::Genome, parent2::Genome)::Genome
     end
     # global cycle check
     try
-        genome_try = Genome(next_id(), child_nodes, child_connections, 0.0, 0.0)
+        genome_try = Genome(next_genome_id(), child_nodes, child_connections, 0.0, 0.0)
         _ = ForwardPass.topological_sort(genome_try)
         return genome_try
     catch ex

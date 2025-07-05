@@ -3,7 +3,7 @@ module Mutation
 using ..Types
 using ..Innovation
 using Random
-using ..CreateGenome: next_id
+using ..CreateGenome: next_genome_id
 
 export mutate_weights!, mutate, add_connection!, add_node!, causes_cycle
 
@@ -20,7 +20,7 @@ Mutates the weights of a genome's connections in-place.
 - `perturb_chance`: Chance of small mutation vs full replacement
 - `sigma`: Stddev of the perturbation
 """
-function mutate_weights!(genome::Genome; perturb_chance=0.95, sigma=0.1)
+function mutate_weights!(genome::Genome; perturb_chance=0.95, sigma=0.06)
     for conn in values(genome.connections)
         if rand() < perturb_chance
             conn.weight += randn() * sigma  # change curretn weight
@@ -156,7 +156,7 @@ function add_node!(genome::Genome)
         false,
         old_conn.innovation_number,
     ) #deactivate conenction
-    new_node_id = next_id()  #create new node id
+    new_node_id = next_genome_id()  #create new node id
     genome.nodes[new_node_id] = Node(new_node_id, :hidden)      #create new genome
 
     new_innov1 = next_innovation_number()
