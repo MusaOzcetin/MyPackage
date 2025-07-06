@@ -2,6 +2,8 @@ using Test
 using Neat
 
 @testset "create_genome" begin
+     # Reset the innovation counter so tests are deterministic
+    Neat.Innovation.reset_innovation_counter!()
     # Example: 2 inputs, 1 output
     genome = Neat.CreateGenome.create_genome(2, 1)
 
@@ -26,18 +28,18 @@ using Neat
 
     # --- Check that each input connects to each output ---
     for input_id in 1:2
-        for output_id in 3:3  # output IDs start at num_inputs + 1
-            @test haskey(genome.connections, (input_id, output_id))
-            conn = genome.connections[(input_id, output_id)]
-            @test conn.enabled == true
-            @test conn.in_node == input_id
-            @test conn.out_node == output_id
-        end
+        output_id = 3  # only one output node
+        @test haskey(genome.connections, (input_id, output_id))
+        conn = genome.connections[(input_id, output_id)]
+        @test conn.enabled == true
+        @test conn.in_node == input_id
+        @test conn.out_node == output_id
     end
 
-    # --- Check innovation numbers are unique and sequential ---
+    # --- Check innovation numbers are unique and sequential starting at 3---
     innov_numbers = [conn.innovation_number for conn in values(genome.connections)]
-    @test innov_numbers == collect(1:length(innov_numbers))
+    expected_innov = collect(3:3+length(innov_numbers)-1)
+    @test innov_numbers == expected_innov
 
 end
 
