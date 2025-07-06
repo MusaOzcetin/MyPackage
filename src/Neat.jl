@@ -40,6 +40,6 @@ export Genome,
     compute_offspring_counts,
     select_elites,
     next_genome_id,
-    preserve_champion!
+    preserve_champion
 
 end # module
