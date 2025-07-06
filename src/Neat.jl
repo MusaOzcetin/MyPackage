@@ -10,6 +10,7 @@ include("innovation.jl")
 include("mutation.jl")
 include("crossover.jl")
 include("speciation.jl")
+include("visualization.jl")
 
 using .Types
 using .CreateGenome
@@ -20,6 +21,7 @@ using .Innovation
 using .Mutation
 using .Crossover
 using .Speciation
+using .Visualization
 
 export Genome,
     Node,
