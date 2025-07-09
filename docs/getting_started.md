@@ -18,28 +18,44 @@ This guide will walk you through setting up and running your first experiment us
 
 ## 1. Clone the repository
 
+Clone the repository and activate the environment.
+
 ```bash
 git clone https://github.com/your-username/Neat.jl.git
 cd Neat.jl
 ```
+
 ## 2. Basic Working Example
+
+Creating, evaluating, mutating, and evolving genomes.
+
+### 2.1. Create a minimal genome
+
+Creating a genome with 2 input and 1 output node.
+
 ```julia
-using Neat  
-```
-### 1. Create a new genome with 2 input nodes and 1 output node
-```julia
+using Neat
+
 genome = create_genome(2, 1)
 println("Created genome with ID: ", genome.id)
 println("Number of nodes: ", length(genome.nodes))
 println("Number of connections: ", length(genome.connections))
 ```
-### 2. Evaluate the genome's fitness
+
+### 2.2. Evaluate fitness
+
+Evaluate the genome on a simple XOR task using evaluate_fitness.
+
 ```julia
 fitness_before = evaluate_fitness(genome)
 genome.fitness = fitness_before
 println("Fitness before mutation: ", round(fitness_before, digits=4))
 ```
-### 3. Mutate the genome 
+
+### 2.3. Mutate the genome
+
+Apply random structural and weight mutations to the genome.
+
 ```julia
 mutate(genome)
 
@@ -47,13 +63,21 @@ println("After mutation:")
 println("Number of nodes: ", length(genome.nodes))
 println("Number of connections: ", length(genome.connections))
 ```
-### 4. Re-evaluate fitness after mutation
+
+### 2.4. Re-evaluate fitness after mutation
+
+Re-evaluate the modified genome to observe fitness change.
+
 ```julia
 fitness_after = evaluate_fitness(genome)
 genome.fitness = fitness_after
 println("Fitness after mutation: ", round(fitness_after, digits=4))
 ```
-### 5. Simple evolutionary loop example: initialize a population, evaluate, mutate
+
+### 2.5. Simulate simple evolution
+
+Create a small population, evaluates fitness, and mutates over generations.
+
 ```julia
 population = [create_genome(2, 1) for _ in 1:10]
 
@@ -74,8 +98,10 @@ for generation in 1:10
     end
 end
 ```
-## 3. Enhancements
-- number of species and number of genomes per species
-- mutation regarding either the weights, nodes or connections
-- crossover process instead of mutation process
 
+## 3. NEAT Features Supported
+
+- Species tracking and reproduction using speciation.jl
+- Mutation operators for weights, nodes, and connections
+- Crossover-based reproduction instead of mutation-only
+- Training over multiple generations with evolve_generation() or train()
