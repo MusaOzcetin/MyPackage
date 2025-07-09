@@ -12,7 +12,7 @@ TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 
 [compat]
 CSV = "0.10"
-Plots = "1.40.16"
+Plots = "1.40.13"
 Random = "1.11.0"
 Revise = "3.8.0"
 TOML = "1.0.3"
