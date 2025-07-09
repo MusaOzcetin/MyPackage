@@ -10,6 +10,7 @@ include("create_population.jl")
 include("mutation.jl")
 include("crossover.jl")
 include("speciation.jl")
+include("Visualizer/Visualizer.jl")
 
 using .Types
 using .CreateGenome
@@ -20,6 +21,7 @@ using .Innovation
 using .Mutation
 using .Crossover
 using .Speciation
+using .Visualizer
 
 export Genome,
     Node,
@@ -37,6 +39,11 @@ export Genome,
     adjust_fitness!,
     compute_offspring_counts,
     select_elites,
-    next_genome_id
+    next_genome_id, 
+    plot_genome_complexity,
+    plot_fitness_boxplot,
+    plot_genome_network,
+    animate_species_network_evolution,
+    select_best_genomes
 
 end # module
