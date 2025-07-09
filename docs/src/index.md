@@ -22,6 +22,7 @@ Modules = [
   Neat.Population,
   Neat.Crossover,
   Neat.Speciation,
-  Neat.Innovation
+  Neat.Innovation,
+  Neat.NeatTrain
 ]
 ```
