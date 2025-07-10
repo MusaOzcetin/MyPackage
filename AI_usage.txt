@@ -1,0 +1,11 @@
+Requirement Analysis:
+    Used to have a general understanding of the project and required functionalities/modules.
+
+Test Coverage:
+    Used to generate test cases for modules.
+
+Fixing Errors:
+    Used to fix errors encountered on modules/functions.
+
+Formatting:
+    Used to improve readability of functions and making them prettier.
