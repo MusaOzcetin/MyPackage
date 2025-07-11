@@ -1,7 +1,3 @@
-module CreateGenome
-
-using ..Types
-using ..Innovation
 export create_genome
 export next_genome_id
 export reset_genome_id!
@@ -67,5 +63,3 @@ Resets the counter (useful for tests).
 """
 reset_genome_id!() = (genome_id_counter[] = 0)
 
-
-end # module

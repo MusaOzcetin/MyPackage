@@ -1,18 +1,5 @@
-module NeatTrain
-
 using Random
 using Plots
-using ..NeatConfig: get_config
-using ..Types
-using ..CreateGenome
-using ..ForwardPass: forward_pass
-using ..Fitness: evaluate_fitness
-using ..Population
-using ..Speciation
-using ..Mutation: mutate
-using ..Crossover: crossover
-using ..Visualize: plot_fitness_history
-
 export train
 
 """
@@ -147,4 +134,3 @@ function train(
     return population, best_fitness_history
 end
 
-end  # module NeatTrain

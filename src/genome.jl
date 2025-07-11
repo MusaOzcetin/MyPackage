@@ -1,4 +1,4 @@
-module Types
+
 
 export Node, Connection, Genome
 
@@ -35,6 +35,4 @@ mutable struct Genome
     connections::Dict{Tuple{Int,Int},Connection}
     fitness::Float64
     adjusted_fitness::Float64
-end
-
 end

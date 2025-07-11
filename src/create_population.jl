@@ -1,8 +1,3 @@
-module Population
-
-using ..CreateGenome
-using ..Types
-
 export initialize_population
 
 """
@@ -27,4 +22,4 @@ function initialize_population(n::Int, num_inputs::Int, num_outputs::Int)
     return population
 end
 
-end
+

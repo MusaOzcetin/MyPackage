@@ -1,5 +1,3 @@
-module NeatConfig
-
 using TOML
 
 """
@@ -89,4 +87,3 @@ end
 # Export public API
 export get_config
 
-end # module NeatConfig

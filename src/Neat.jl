@@ -4,28 +4,15 @@ module Neat
 include("config.jl")
 include("genome.jl")
 include("innovation.jl")
+include("fitness.jl")v
 include("create_genome.jl")
 include("forward_pass.jl")
-include("fitness.jl")
 include("create_population.jl")
 include("mutation.jl")
 include("crossover.jl")
 include("speciation.jl")
 include("visualize.jl")
 include("training.jl")
-
-using .NeatConfig 
-using .Types
-using .CreateGenome
-using .ForwardPass
-using .Fitness
-using .Population
-using .Innovation
-using .Mutation
-using .Crossover
-using .Speciation
-using .NeatTrain
-using .Visualize
 
 export Genome,
     Node,

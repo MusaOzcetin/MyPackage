@@ -1,9 +1,3 @@
-module Speciation
-
-using ..Types
-using Random
-using ..NeatConfig: get_config
-
 export compatibility_distance
 export assign_species!
 export adjust_fitness!
@@ -215,5 +209,3 @@ function select_elites(species::Vector{T}, elite_frac::Float64) where {T}
 end
 
 export select_elites
-
-end

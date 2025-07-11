@@ -12,18 +12,6 @@ Documentation for [Neat](https://github.com/MusaOzcetin/Neat.jl).
 
 ```@autodocs
 Modules = [
-  Neat,
-  Neat.NeatConfig,
-  Neat.CreateGenome,
-  Neat.Fitness,
-  Neat.ForwardPass,
-  Neat.Types,
-  Neat.Mutation,
-  Neat.Population,
-  Neat.Crossover,
-  Neat.Speciation,
-  Neat.Innovation,
-  Neat.NeatTrain,
-  Neat.Visualize
+  Neat
 ]
 ```

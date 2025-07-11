@@ -1,5 +1,3 @@
-module Innovation
-
 export get_innovation_number, reset_innovation_counter!
 
 # Global innovation number tracker (starts at 3 because 1 & 2 are used initially)
@@ -36,4 +34,4 @@ function reset_innovation_counter!()
     empty!(connection_innovations)
 end
 
-end
+

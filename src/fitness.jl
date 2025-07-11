@@ -1,9 +1,3 @@
-module Fitness
-
-using ..Types
-using ..ForwardPass
-using ..NeatConfig
-
 export evaluate_fitness
 
 # ----- training data; can be externalized in future -------
@@ -45,7 +39,7 @@ A more positive return value indicates better performance (lower overall error).
 function evaluate_fitness(genome::Genome; ds_name::String=get_config()["data"]["training_data"])::Float64
     total_error = 0.0
 
-    ds = getfield(Fitness, Symbol(ds_name))
+    ds = getfield(Neat, Symbol(ds_name))
 
     for (x, target) in ds
         acts = forward_pass(genome, x)
@@ -55,6 +49,4 @@ function evaluate_fitness(genome::Genome; ds_name::String=get_config()["data"]["
     end
 
     return -total_error
-end
-
 end

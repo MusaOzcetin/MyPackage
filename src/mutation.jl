@@ -1,10 +1,3 @@
-module Mutation
-
-using ..Types
-using ..Innovation
-using ..NeatConfig
-using Random
-
 export mutate_weights!, mutate, add_connection!, add_node!, causes_cycle
 
 """
@@ -188,4 +181,3 @@ function mutate(genome::Genome;
     end
 end
 
-end # module Mutation

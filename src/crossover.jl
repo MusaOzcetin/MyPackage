@@ -1,10 +1,3 @@
-module Crossover
-
-using ..Types
-using ..ForwardPass
-using Random
-using ..CreateGenome: next_genome_id
-
 export crossover
 
 """
@@ -91,6 +84,4 @@ function crossover(parent1::Genome, parent2::Genome)::Genome
     catch ex
         return parent1
     end
-end
-
 end

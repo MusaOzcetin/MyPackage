@@ -1,7 +1,3 @@
-module ForwardPass
-
-using ..Types
-
 export forward_pass
 
 """
@@ -112,4 +108,4 @@ function topological_sort(genome::Genome)::Vector{Int}
     return order
 end
 
-end # module ForwardPass
+
