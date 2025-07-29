@@ -46,7 +46,6 @@ export Genome,
     next_genome_id,
     get_config,
     train,
-    plot_fitness_history,
-    visualize_genome
+    plot_fitness_history
 
 end # module

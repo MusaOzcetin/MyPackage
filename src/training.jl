@@ -11,7 +11,7 @@ using ..Population
 using ..Speciation
 using ..Mutation: mutate
 using ..Crossover: crossover
-using ..Visualize: plot_fitness_history, visualize_genome
+using ..Visualize: plot_fitness_history
 
 export train
 
@@ -145,11 +145,10 @@ function train(
     plot_fitness_history(best_fitness_history; filename="fitness_history.png")
 
     best_genome = argmax(g -> g.fitness, population)
-
+  
     visualize_genome(best_genome)
 
     return population, best_fitness_history
 
-end
 
 end  # module NeatTrain
